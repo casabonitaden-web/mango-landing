@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mango Master — Telegram-бот для beauty-майстрів</title>
+  <meta name="description" content="Mango Master — Telegram-бот для beauty-майстрів. Запис 24/7, вільні вікна, нагадування, гнучка передоплата, розсилки та контроль клієнтів в одному боті." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: '#0f1720',
+            inkSoft: '#182331',
+            card: 'rgba(255,255,255,0.06)',
+            line: 'rgba(255,255,255,0.12)',
+            gold: '#d6b06a',
+            goldSoft: '#edd19a',
+            peach: '#f3dfd3'
+          },
+          boxShadow: {
+            soft: '0 20px 50px rgba(0,0,0,0.28)',
+            glow: '0 0 0 1px rgba(214,176,106,0.18), 0 18px 40px rgba(0,0,0,0.32)'
+          },
+          backgroundImage: {
+            mesh: 'radial-gradient(circle at top left, rgba(214,176,106,0.16), transparent 30%), radial-gradient(circle at top right, rgba(255,255,255,0.08), transparent 18%), radial-gradient(circle at bottom, rgba(242,177,117,0.10), transparent 24%)'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body {
+      background:
+        radial-gradient(circle at 15% 0%, rgba(214,176,106,0.12), transparent 25%),
+        radial-gradient(circle at 85% 10%, rgba(255,255,255,0.05), transparent 18%),
+        linear-gradient(180deg, #0d141c 0%, #111b26 45%, #0d141c 100%);
+    }
+    .glass {
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+    .gold-text {
+      background: linear-gradient(135deg, #f4dfaf 0%, #d6b06a 38%, #b98c41 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .section-anchor { scroll-margin-top: 96px; }
+  </style>
+</head>
+<body class="text-white antialiased selection:bg-gold selection:text-ink">
+  <header class="sticky top-0 z-50 border-b border-white/10 bg-ink/75 backdrop-blur-xl">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+      <a href="#top" class="flex items-center gap-3">
+        <div class="flex h-11 w-11 items-center justify-center rounded-2xl border border-gold/20 bg-white/5 shadow-glow">
+          <img src="assets/img/logo.png" alt="Mango Master logo" class="h-8 w-8 object-contain" />
+        </div>
+        <div>
+          <div class="text-lg font-semibold tracking-tight">Mango Master</div>
+          <div class="text-xs text-white/60">Telegram-бот для beauty-майстрів</div>
+        </div>
+      </a>
+
+      <nav class="hidden items-center gap-8 md:flex">
+        <a href="#features" class="text-sm text-white/75 transition hover:text-white">Можливості</a>
+        <a href="#prepayment" class="text-sm text-white/75 transition hover:text-white">Передоплата</a>
+        <a href="#broadcasts" class="text-sm text-white/75 transition hover:text-white">Розсилки</a>
+        <a href="#pricing" class="text-sm text-white/75 transition hover:text-white">Тарифи</a>
+        <a href="https://t.me/Mango_Master_Bot" target="_blank" rel="noopener noreferrer" class="rounded-full border border-gold/20 bg-gold px-5 py-2.5 text-sm font-semibold text-ink transition hover:scale-[1.02] hover:bg-goldSoft">Спробувати безкоштовно</a>
+      </nav>
+
+      <button id="menuButton" class="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/5 md:hidden" aria-label="Відкрити меню">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+
+    <div id="mobileMenu" class="hidden border-t border-white/10 bg-ink/95 md:hidden">
+      <div class="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 sm:px-6">
+        <a href="#features" class="rounded-xl px-3 py-3 text-sm text-white/80 hover:bg-white/5 hover:text-white">Можливості</a>
+        <a href="#prepayment" class="rounded-xl px-3 py-3 text-sm text-white/80 hover:bg-white/5 hover:text-white">Передоплата</a>
+        <a href="#broadcasts" class="rounded-xl px-3 py-3 text-sm text-white/80 hover:bg-white/5 hover:text-white">Розсилки</a>
+        <a href="#pricing" class="rounded-xl px-3 py-3 text-sm text-white/80 hover:bg-white/5 hover:text-white">Тарифи</a>
+        <a href="https://t.me/Mango_Master_Bot" target="_blank" rel="noopener noreferrer" class="mt-2 rounded-xl bg-gold px-4 py-3 text-center text-sm font-semibold text-ink">Спробувати безкоштовно</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="relative overflow-hidden">
+      <div class="mx-auto grid max-w-7xl gap-14 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-[1.08fr_0.92fr] lg:px-8 lg:py-24">
+        <div class="flex flex-col justify-center">
+          <div class="mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-gold/15 bg-white/5 px-4 py-2 text-sm text-white/80">
+            <span class="h-2 w-2 rounded-full bg-gold"></span>
+            14 днів безкоштовно • Запуск одразу в Telegram
+          </div>
+
+          <h1 class="max-w-3xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+            Telegram-бот для beauty-майстрів, який допомагає вести запис <span class="gold-text">без хаосу</span>
+          </h1>
+
+          <p class="mt-6 max-w-2xl text-base leading-8 text-white/75 sm:text-lg">
+            Mango Master допомагає приймати записи 24/7, показувати вільні вікна, нагадувати клієнтам про візит, працювати з передоплатою та повертати клієнтів через розсилки.
+          </p>
+
+          <div class="mt-8 flex flex-col gap-4 sm:flex-row">
+            <a href="https://t.me/Mango_Master_Bot" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center rounded-full bg-gold px-7 py-4 text-base font-semibold text-ink transition hover:scale-[1.02] hover:bg-goldSoft">
+              Спробувати безкоштовно
+            </a>
+            <a href="#features" class="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-7 py-4 text-base font-semibold text-white transition hover:border-gold/20 hover:bg-white/10">
+              Подивитися можливості
+            </a>
+          </div>
+
+          <div class="mt-8 flex flex-wrap items-center gap-4 text-sm text-white/60">
+            <div class="rounded-full border border-white/10 bg-white/5 px-4 py-2">@Mango_Master_Bot</div>
+            <div class="rounded-full border border-white/10 bg-white/5 px-4 py-2">Підходить для beauty-сфери</div>
+            <div class="rounded-full border border-white/10 bg-white/5 px-4 py-2">Простий тариф без пакетів</div>
+          </div>
+        </div>
+
+        <div class="relative">
+          <div class="absolute inset-0 -z-10 blur-3xl" aria-hidden="true">
+            <div class="mx-auto mt-16 h-64 w-64 rounded-full bg-gold/15"></div>
+          </div>
+
+          <div class="glass overflow-hidden rounded-[2rem] p-3 shadow-soft">
+            <div class="rounded-[1.5rem] border border-white/10 bg-inkSoft/90 p-3">
+              <img src="assets/img/master-card.jpg" alt="Картка майстра в боті Mango Master" class="w-full rounded-[1.25rem] object-cover" />
+            </div>
+
+            <div class="mt-4 grid gap-3 sm:grid-cols-2">
+              <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <div class="text-sm text-white/60">Запис</div>
+                <div class="mt-1 text-lg font-semibold">24/7 без переписки</div>
+              </div>
+              <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <div class="text-sm text-white/60">Передоплата</div>
+                <div class="mt-1 text-lg font-semibold">Гнучко для нових і постійних</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-anchor px-4 py-8 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-7xl">
+        <div class="glass rounded-[2rem] p-8 shadow-soft sm:p-10">
+          <div class="grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
+            <div>
+              <div class="mb-4 inline-flex rounded-full border border-red-400/20 bg-red-400/10 px-4 py-2 text-sm text-red-100">Проблема ручного запису</div>
+              <h2 class="text-3xl font-semibold tracking-tight sm:text-4xl">Коли запис ведеться вручну — майстер втрачає час, клієнтів і гроші</h2>
+              <p class="mt-5 max-w-2xl text-base leading-8 text-white/72">
+                Постійні переписки, уточнення по часу, ручні нагадування, пропущені повідомлення, порожні вікна в графіку та клієнти, які просто забули про запис — усе це забирає сили, які краще витрачати на роботу, а не на хаос в організації.
+              </p>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="rounded-2xl border border-white/10 bg-white/5 p-5">Клієнти довго переписуються перед записом</div>
+              <div class="rounded-2xl border border-white/10 bg-white/5 p-5">Частина записів губиться в чатах</div>
+              <div class="rounded-2xl border border-white/10 bg-white/5 p-5">Вільні вікна заповнюються занадто повільно</div>
+              <div class="rounded-2xl border border-white/10 bg-white/5 p-5">Доводиться вручну нагадувати про візит</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="section-anchor px-4 py-12 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-7xl">
+        <div class="max-w-3xl">
+          <div class="mb-4 inline-flex rounded-full border border-gold/15 bg-gold/10 px-4 py-2 text-sm text-goldSoft">Mango Master бере частину рутини на себе</div>
+          <h2 class="text-3xl font-semibold tracking-tight sm:text-4xl">Все, що потрібно для зручного запису в одному боті</h2>
+          <p class="mt-4 text-base leading-8 text-white/72">
+            Бот допомагає клієнту самостійно записатися у зручний час, а майстру — тримати під контролем графік, клієнтів, передоплату, нагадування та повторні візити без нескінченної ручної переписки.
+          </p>
+        </div>
+
+        <div class="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          <article class="glass rounded-[1.75rem] p-6 shadow-soft">
+            <div class="text-sm text-goldSoft">01</div>
+            <h3 class="mt-3 text-xl font-semibold">Запис 24/7 без зайвої переписки</h3>
+            <p class="mt-3 text-sm leading-7 text-white/70">Клієнт сам обирає послугу, дату та час у боті — без довгих уточнень у чаті.</p>
+          </article>
+          <article class="glass rounded-[1.75rem] p-6 shadow-soft">
+            <div class="text-sm text-goldSoft">02</div>
+            <h3 class="mt-3 text-xl font-semibold">Найближчі вільні вікна одразу перед очима</h3>
+            <p class="mt-3 text-sm leading-7 text-white/70">Бот спочатку показує 5 найближчих доступних слотів, а далі клієнт може відкрити весь календар.</p>
+          </article>
+          <article class="glass rounded-[1.75rem] p-6 shadow-soft">
+            <div class="text-sm text-goldSoft">03</div>
+            <h3 class="mt-3 text-xl font-semibold">Гнучка передоплата</h3>
+            <p class="mt-3 text-sm leading-7 text-white/70">Передоплату можна вмикати або вимикати, брати лише з нових клієнтів і не вимагати від постійних.</p>
+          </article>
+          <article class="glass rounded-[1.75rem] p-6 shadow-soft">
+            <div class="text-sm text-goldSoft">04</div>
+            <h3 class="mt-3 text-xl font-semibold">Нагадування, щоб клієнти не забували про запис</h3>
+            <p class="mt-3 text-sm leading-7 text-white/70">Автоматичні повідомлення за 24 години та за 2 години до візиту.</p>
+          </article>
+          <article class="glass rounded-[1.75rem] p-6 shadow-soft">
+            <div class="text-sm text-goldSoft">05</div>
+            <h3 class="mt-3 text-xl font-semibold">Розсилки для повернення клієнтів</h3>
+            <p class="mt-3 text-sm leading-7 text-white/70">Можна написати всім, тим, хто давно не приходив, або потрібному сегменту бази.</p>
+          </article>
+          <article class="glass rounded-[1.75rem] p-6 shadow-soft">
+            <div class="text-sm text-goldSoft">06</div>
+            <h3 class="mt-3 text-xl font-semibold">Контроль записів у кілька натискань</h3>
+            <p class="mt-3 text-sm leading-7 text-white/70">Майстер бачить записи, може переносити їх, відмічати візит або неявку та додавати клієнтів вручну.</p>
+          </article>
+          <article class="glass rounded-[1.75rem] p-6 shadow-soft">
+            <div class="text-sm text-goldSoft">07</div>
+            <h3 class="mt-3 text-xl font-semibold">Захист від накладок у графіку</h3>
+            <p class="mt-3 text-sm leading-7 text-white/70">Система допомагає уникати перетинів у розкладі, щоб один і той самий час не зайнявся двічі.</p>
+          </article>
+          <article class="glass rounded-[1.75rem] p-6 shadow-soft">
+            <div class="text-sm text-goldSoft">08</div>
+            <h3 class="mt-3 text-xl font-semibold">Опис послуг ще до запису</h3>
+            <p class="mt-3 text-sm leading-7 text-white/70">Клієнт бачить, що входить у послугу ще до вибору часу, тому зайвих запитань і непорозумінь стає менше.</p>
+          </article>
+          <article class="glass rounded-[1.75rem] p-6 shadow-soft">
+            <div class="text-sm text-goldSoft">09</div>
+            <h3 class="mt-3 text-xl font-semibold">Додаткові опції до послуг</h3>
+            <p class="mt-3 text-sm leading-7 text-white/70">Майстер може додавати до послуги додаткові опції з окремою ціною та тривалістю, якщо це потрібно в роботі.</p>
+          </article>
+          <article class="glass rounded-[1.75rem] p-6 shadow-soft">
+            <div class="text-sm text-goldSoft">10</div>
+            <h3 class="mt-3 text-xl font-semibold">Буфер між записами</h3>
+            <p class="mt-3 text-sm leading-7 text-white/70">Можна задати паузу між клієнтами, щоб графік був реалістичним і не складався впритул.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-anchor px-4 py-12 sm:px-6 lg:px-8">
+      <div class="mx-auto grid max-w-7xl gap-8 lg:grid-cols-2">
+        <div class="glass rounded-[2rem] p-6 shadow-soft sm:p-8">
+          <div class="mb-4 inline-flex rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/70">Клієнту легко записатися</div>
+          <h2 class="text-2xl font-semibold sm:text-3xl">Клієнт бачить майстра, портфоліо та шлях до запису без плутанини</h2>
+          <p class="mt-4 text-base leading-8 text-white/72">
+            Клієнт бачить картку майстра, може переглянути інформацію про послуги, локацію, портфоліо, вибрати потрібну процедуру та одразу перейти до запису.
+          </p>
+          <img src="assets/img/master-card.jpg" alt="Картка майстра" class="mt-6 w-full rounded-[1.5rem] border border-white/10" />
+        </div>
+
+        <div class="glass rounded-[2rem] p-6 shadow-soft sm:p-8">
+          <div class="mb-4 inline-flex rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/70">Вільні вікна</div>
+          <h2 class="text-2xl font-semibold sm:text-3xl">Спочатку — 5 найближчих слотів, потім — весь календар</h2>
+          <p class="mt-4 text-base leading-8 text-white/72">
+            Щоб клієнт не губився в зайвому, бот одразу показує найближчі доступні вікна. Якщо цього недостатньо, можна відкрити весь календар і самостійно вибрати дату та час.
+          </p>
+          <img src="assets/img/free-slots.jpg" alt="Найближчі вільні вікна" class="mt-6 w-full rounded-[1.5rem] border border-white/10" />
+        </div>
+      </div>
+    </section>
+
+    <section id="prepayment" class="section-anchor px-4 py-12 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-7xl">
+        <div class="glass rounded-[2rem] p-8 shadow-soft sm:p-10">
+          <div class="grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
+            <div>
+              <div class="mb-4 inline-flex rounded-full border border-gold/15 bg-gold/10 px-4 py-2 text-sm text-goldSoft">Гнучка передоплата</div>
+              <h2 class="text-3xl font-semibold tracking-tight sm:text-4xl">Передоплата без жорстких правил для всіх підряд</h2>
+              <p class="mt-5 text-base leading-8 text-white/72">
+                У Mango Master ви самі вирішуєте, коли передоплата потрібна, а коли ні. Це допомагає захистити графік від несерйозних записів, але не створює зайвих бар’єрів для постійних клієнтів.
+              </p>
+              <div class="mt-6 grid gap-3 sm:grid-cols-2">
+                <div class="rounded-2xl border border-white/10 bg-white/5 p-4">Передоплату можна повністю вимкнути</div>
+                <div class="rounded-2xl border border-white/10 bg-white/5 p-4">Можна брати лише з нових клієнтів</div>
+                <div class="rounded-2xl border border-white/10 bg-white/5 p-4">Для постійних — запис без передоплати</div>
+                <div class="rounded-2xl border border-white/10 bg-white/5 p-4">Майстер підтверджує оплату вручну</div>
+              </div>
+            </div>
+
+            <div class="grid gap-5">
+              <img src="assets/img/prepayment-message.jpg" alt="Повідомлення про передоплату" class="w-full rounded-[1.5rem] border border-white/10" />
+              <img src="assets/img/payment-confirmed.jpg" alt="Оплату підтверджено" class="w-full rounded-[1.5rem] border border-white/10" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-anchor px-4 py-12 sm:px-6 lg:px-8">
+      <div class="mx-auto grid max-w-7xl gap-8 lg:grid-cols-2">
+        <div class="glass rounded-[2rem] p-8 shadow-soft">
+          <div class="mb-4 inline-flex rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/70">Нагадування</div>
+          <h2 class="text-2xl font-semibold sm:text-3xl">Менше пропусків запису без ручних нагадувань</h2>
+          <p class="mt-4 text-base leading-8 text-white/72">
+            Бот автоматично нагадує клієнту про запис за 24 години та за 2 години до візиту. Це допомагає зменшити кількість випадків, коли людина просто забула про сеанс, і знімає з майстра зайву рутину.
+          </p>
+          <div class="mt-6 grid gap-4">
+            <div class="rounded-2xl border border-white/10 bg-white/5 p-5">Нагадування за 24 години до візиту</div>
+            <div class="rounded-2xl border border-white/10 bg-white/5 p-5">Нагадування за 2 години до візиту</div>
+          </div>
+        </div>
+
+        <div class="glass rounded-[2rem] p-8 shadow-soft">
+          <div class="mb-4 inline-flex rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/70">Зворотний зв’язок</div>
+          <h2 class="text-2xl font-semibold sm:text-3xl">Після візиту бот допомагає отримати оцінку якості послуги</h2>
+          <p class="mt-4 text-base leading-8 text-white/72">
+            Після першого сеансу через 2 години клієнт отримує повідомлення з проханням оцінити якість послуги. Це допомагає краще розуміти враження клієнтів і поступово зміцнювати довіру до сервісу.
+          </p>
+          <div class="mt-6 rounded-2xl border border-white/10 bg-white/5 p-5 text-white/75">
+            Простий сценарій після візиту: бот сам нагадує клієнту залишити оцінку, а майстер отримує корисний зворотний зв’язок без окремих ручних повідомлень.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-anchor px-4 py-12 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-7xl">
+        <div class="glass rounded-[2rem] p-8 shadow-soft sm:p-10">
+          <div class="max-w-3xl">
+            <div class="mb-4 inline-flex rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/70">Ще більше контролю</div>
+            <h2 class="text-3xl font-semibold tracking-tight sm:text-4xl">Гнучкий запис, який підлаштовується під реальну роботу майстра</h2>
+            <p class="mt-4 text-base leading-8 text-white/72">
+              Mango Master допомагає не тільки приймати записи, а й краще налаштовувати саму логіку роботи: без накладок, без зайвих запитань від клієнтів і без графіка, складеного впритул.
+            </p>
+          </div>
+          <div class="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+            <div class="rounded-[1.5rem] border border-white/10 bg-white/5 p-5">
+              <h3 class="text-lg font-semibold">Захист від подвійного запису</h3>
+              <p class="mt-3 text-sm leading-7 text-white/70">Система допомагає не допустити накладок у графіку та перетинів по часу.</p>
+            </div>
+            <div class="rounded-[1.5rem] border border-white/10 bg-white/5 p-5">
+              <h3 class="text-lg font-semibold">Опис послуг до вибору часу</h3>
+              <p class="mt-3 text-sm leading-7 text-white/70">Клієнт одразу бачить, що входить у процедуру, ще до запису.</p>
+            </div>
+            <div class="rounded-[1.5rem] border border-white/10 bg-white/5 p-5">
+              <h3 class="text-lg font-semibold">Додаткові опції</h3>
+              <p class="mt-3 text-sm leading-7 text-white/70">До послуги можна додавати додаткові опції з окремою ціною та тривалістю.</p>
+            </div>
+            <div class="rounded-[1.5rem] border border-white/10 bg-white/5 p-5">
+              <h3 class="text-lg font-semibold">Буфер між клієнтами</h3>
+              <p class="mt-3 text-sm leading-7 text-white/70">Пауза між записами допомагає зробити графік реалістичним і комфортним.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="broadcasts" class="section-anchor px-4 py-12 sm:px-6 lg:px-8">
+      <div class="mx-auto grid max-w-7xl gap-8 lg:grid-cols-2">
+        <div class="glass rounded-[2rem] p-8 shadow-soft">
+          <div class="mb-4 inline-flex rounded-full border border-gold/15 bg-gold/10 px-4 py-2 text-sm text-goldSoft">Повернення клієнтів</div>
+          <h2 class="text-2xl font-semibold sm:text-3xl">Повернути клієнта простіше, ніж шукати нового</h2>
+          <p class="mt-4 text-base leading-8 text-white/72">
+            Mango Master дозволяє робити розсилки по базі клієнтів і швидко звертатися до тих, хто давно не приходив. Це зручно, коли потрібно заповнити вільне вікно, нагадати про себе або повернути частину бази без ручної переписки з кожним окремо.
+          </p>
+          <div class="mt-6 grid gap-3 sm:grid-cols-2">
+            <div class="rounded-2xl border border-white/10 bg-white/5 p-4">Розсилка всім клієнтам</div>
+            <div class="rounded-2xl border border-white/10 bg-white/5 p-4">Тим, хто давно не був</div>
+            <div class="rounded-2xl border border-white/10 bg-white/5 p-4">За потрібним сегментом бази</div>
+            <div class="rounded-2xl border border-white/10 bg-white/5 p-4">Для заповнення вільних вікон</div>
+            <div class="rounded-2xl border border-white/10 bg-white/5 p-4">Для повернення неактивних клієнтів</div>
+            <div class="rounded-2xl border border-white/10 bg-white/5 p-4">Для швидкого нагадування про себе</div>
+          </div>
+        </div>
+
+        <div class="glass rounded-[2rem] p-8 shadow-soft">
+          <div class="mb-4 inline-flex rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/70">Клієнтська база</div>
+          <h2 class="text-2xl font-semibold sm:text-3xl">Історія візитів, контакти та нотатки — завжди під рукою</h2>
+          <p class="mt-4 text-base leading-8 text-white/72">
+            Mango Master зберігає інформацію про клієнтів: ім’я, телефон, кількість візитів, історію записів, дату останнього візиту та нотатки. Це допомагає працювати з базою не навмання, а системно.
+          </p>
+          <div class="mt-5 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm leading-7 text-white/72">
+            Якщо клієнт кілька разів поспіль не з’являється без попередження, онлайн-запис для нього можна обмежити. Це допомагає краще захищати графік від повторних зривів.
+          </div>
+          <img src="assets/img/clients-base.jpg" alt="Клієнтська база в боті" class="mt-6 w-full rounded-[1.5rem] border border-white/10" />
+        </div>
+      </div>
+    </section>
+
+    <section class="section-anchor px-4 py-12 sm:px-6 lg:px-8">
+      <div class="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1fr_0.92fr]">
+        <div class="glass rounded-[2rem] p-8 shadow-soft">
+          <div class="mb-4 inline-flex rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/70">Контроль графіка</div>
+          <h2 class="text-2xl font-semibold sm:text-3xl">Майстер контролює записи без плутанини</h2>
+          <p class="mt-4 text-base leading-8 text-white/72">
+            У боті видно записи по днях, тижнях і місяцях. Майстер може швидко відмічати, хто прийшов, хто не з’явився, кого потрібно перенести, а також вручну додавати нових клієнтів у графік.
+          </p>
+          <img src="assets/img/appointments-control.jpg" alt="Керування записами" class="mt-6 w-full rounded-[1.5rem] border border-white/10" />
+        </div>
+
+        <div class="grid gap-8">
+          <div class="glass rounded-[2rem] p-8 shadow-soft">
+            <div class="mb-4 inline-flex rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/70">Портфоліо</div>
+            <h2 class="text-2xl font-semibold sm:text-3xl">Портфоліо прямо в картці майстра</h2>
+            <p class="mt-4 text-base leading-8 text-white/72">
+              Клієнт може одразу переглянути роботи майстра перед записом. Це допомагає швидше прийняти рішення і підсилює довіру ще до першого візиту.
+            </p>
+            <div class="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-white/75">До 40 фото в портфоліо майстра</div>
+            <img src="assets/img/portfolio.jpg" alt="Портфоліо майстра" class="mt-6 w-full rounded-[1.5rem] border border-white/10" />
+          </div>
+
+          <div class="glass rounded-[2rem] p-8 shadow-soft">
+            <div class="mb-4 inline-flex rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/70">Для кого</div>
+            <h2 class="text-2xl font-semibold sm:text-3xl">Mango Master підійде beauty-майстрам, які працюють по запису</h2>
+            <div class="mt-6 grid gap-3 sm:grid-cols-2">
+              <div class="rounded-2xl border border-white/10 bg-white/5 p-4">Майстри манікюру та педикюру</div>
+              <div class="rounded-2xl border border-white/10 bg-white/5 p-4">Бровісти</div>
+              <div class="rounded-2xl border border-white/10 bg-white/5 p-4">Lash-майстри</div>
+              <div class="rounded-2xl border border-white/10 bg-white/5 p-4">Косметологи</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="pricing" class="section-anchor px-4 py-12 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-7xl">
+        <div class="glass rounded-[2rem] p-8 shadow-soft sm:p-10">
+          <div class="max-w-3xl">
+            <div class="mb-4 inline-flex rounded-full border border-gold/15 bg-gold/10 px-4 py-2 text-sm text-goldSoft">Тарифи</div>
+            <h2 class="text-3xl font-semibold tracking-tight sm:text-4xl">Простий тариф без складних пакетів</h2>
+            <p class="mt-4 text-base leading-8 text-white/72">Спробуйте бот у роботі без поспіху — перші 14 днів безкоштовно.</p>
+          </div>
+
+          <div class="mt-10 grid gap-5 md:grid-cols-3">
+            <div class="rounded-[1.75rem] border border-white/10 bg-white/5 p-6">
+              <div class="text-sm text-white/60">1 місяць</div>
+              <div class="mt-3 text-4xl font-semibold">300 <span class="text-xl text-white/60">грн</span></div>
+              <p class="mt-3 text-sm leading-7 text-white/70">Зручно, якщо хочете просто почати і подивитися, як бот працює у щоденній роботі.</p>
+            </div>
+            <div class="rounded-[1.75rem] border border-gold/25 bg-gold/10 p-6 shadow-glow">
+              <div class="text-sm text-goldSoft">Найпопулярніший</div>
+              <div class="mt-3 text-4xl font-semibold">800 <span class="text-xl text-white/60">грн</span></div>
+              <div class="mt-1 text-base text-white/75">3 місяці</div>
+              <p class="mt-3 text-sm leading-7 text-white/70">Оптимальний варіант для стабільної роботи без зайвих оплат щомісяця.</p>
+            </div>
+            <div class="rounded-[1.75rem] border border-white/10 bg-white/5 p-6">
+              <div class="text-sm text-white/60">6 місяців</div>
+              <div class="mt-3 text-4xl font-semibold">1500 <span class="text-xl text-white/60">грн</span></div>
+              <p class="mt-3 text-sm leading-7 text-white/70">Підійде тим, хто хоче одразу закрити питання з записом надовше.</p>
+            </div>
+          </div>
+
+          <div class="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="text-sm text-white/65">14 днів безкоштовно • запуск одразу в боті</div>
+            <a href="https://t.me/Mango_Master_Bot" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center rounded-full bg-gold px-7 py-4 text-base font-semibold text-ink transition hover:scale-[1.02] hover:bg-goldSoft">Спробувати безкоштовно</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-anchor px-4 py-12 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-7xl">
+        <div class="grid gap-5 lg:grid-cols-2">
+          <details class="glass rounded-[1.5rem] p-6 shadow-soft">
+            <summary class="cursor-pointer list-none text-lg font-semibold">Чи може клієнт сам вибрати дату та час?</summary>
+            <p class="mt-4 text-sm leading-7 text-white/72">Так. Клієнт бачить найближчі доступні вікна, а за потреби може відкрити весь календар і вибрати зручний час.</p>
+          </details>
+          <details class="glass rounded-[1.5rem] p-6 shadow-soft">
+            <summary class="cursor-pointer list-none text-lg font-semibold">Чи обов’язково брати передоплату з усіх клієнтів?</summary>
+            <p class="mt-4 text-sm leading-7 text-white/72">Ні. Передоплату можна повністю вимкнути або використовувати тільки для нових клієнтів.</p>
+          </details>
+          <details class="glass rounded-[1.5rem] p-6 shadow-soft">
+            <summary class="cursor-pointer list-none text-lg font-semibold">Чи можна не брати передоплату з постійних клієнтів?</summary>
+            <p class="mt-4 text-sm leading-7 text-white/72">Так. Для постійних клієнтів можна залишити запис без передоплати.</p>
+          </details>
+          <details class="glass rounded-[1.5rem] p-6 shadow-soft">
+            <summary class="cursor-pointer list-none text-lg font-semibold">Чи може майстер сам додати клієнта вручну?</summary>
+            <p class="mt-4 text-sm leading-7 text-white/72">Так. Майстер може самостійно додавати записи в графік, коли це потрібно в роботі.</p>
+          </details>
+          <details class="glass rounded-[1.5rem] p-6 shadow-soft">
+            <summary class="cursor-pointer list-none text-lg font-semibold">Чи є нагадування про запис?</summary>
+            <p class="mt-4 text-sm leading-7 text-white/72">Так. Бот надсилає клієнту нагадування за 24 години та за 2 години до візиту.</p>
+          </details>
+          <details class="glass rounded-[1.5rem] p-6 shadow-soft">
+            <summary class="cursor-pointer list-none text-lg font-semibold">Чи можна повернути старих клієнтів через бот?</summary>
+            <p class="mt-4 text-sm leading-7 text-white/72">Так. У боті є розсилки по базі клієнтів, зокрема для тих, хто давно не приходив.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="px-4 py-12 pb-20 sm:px-6 lg:px-8 lg:pb-24">
+      <div class="mx-auto max-w-7xl">
+        <div class="glass rounded-[2rem] p-8 shadow-soft sm:p-12">
+          <div class="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
+            <div>
+              <div class="mb-4 inline-flex rounded-full border border-gold/15 bg-gold/10 px-4 py-2 text-sm text-goldSoft">Фінальний крок</div>
+              <h2 class="text-3xl font-semibold tracking-tight sm:text-4xl">Почніть вести запис простіше вже сьогодні</h2>
+              <p class="mt-4 max-w-2xl text-base leading-8 text-white/72">
+                Підключіть Mango Master і спробуйте, як може виглядати запис без хаосу, ручних нагадувань і зайвої переписки.
+              </p>
+              <div class="mt-5 text-sm text-white/55">Перехід одразу в бот — @Mango_Master_Bot</div>
+            </div>
+            <div>
+              <a href="https://t.me/Mango_Master_Bot" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center rounded-full bg-gold px-8 py-4 text-base font-semibold text-ink transition hover:scale-[1.02] hover:bg-goldSoft">Перейти в бот</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-white/10 px-4 py-8 text-sm text-white/50 sm:px-6 lg:px-8">
+    <div class="mx-auto flex max-w-7xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div>© 2026 Mango Master</div>
+      <div class="flex flex-wrap items-center gap-4">
+        <a href="#top" class="hover:text-white">Вгору</a>
+        <a href="https://t.me/Mango_Master_Bot" target="_blank" rel="noopener noreferrer" class="hover:text-white">@Mango_Master_Bot</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const menuButton = document.getElementById('menuButton');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    menuButton?.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    document.querySelectorAll('#mobileMenu a').forEach((link) => {
+      link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+    });
+  </script>
+</body>
+</html>
