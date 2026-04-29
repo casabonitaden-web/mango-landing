@@ -240,9 +240,60 @@ h2{font-size:clamp(28px,4.4vw,46px);font-weight:700;letter-spacing:-0.025em;line
 .hero-hint svg{width:14px;height:14px;opacity:.6}
 
 @media (max-width:768px){
-  .phones{flex-direction:column;gap:16px;align-items:center}
-  .phone-side{display:none}
-  .phone-center{width:260px}
+  .phones{
+    flex-direction:row;
+    gap:16px;
+    align-items:center;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    scroll-behavior:smooth;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    margin:48px -28px 0;
+    padding:30px 14vw;
+    perspective:none;
+  }
+  .phones::-webkit-scrollbar{display:none}
+  .phone{
+    flex-shrink:0;
+    width:72vw;
+    max-width:280px;
+    scroll-snap-align:center;
+    transform:none !important;
+  }
+  .phone-side,.phone-side.left,.phone-side.right{
+    display:block;
+    transform:none !important;
+    rotate:0deg !important;
+  }
+  .phones:hover .phone-side.left,
+  .phones:hover .phone-side.right,
+  .phones:hover .phone-center{transform:none !important}
+  .hero-dots{
+    display:flex;justify-content:center;gap:8px;
+    margin-top:18px;
+  }
+  .hero-dot{
+    width:8px;height:8px;border-radius:50%;
+    background:rgba(184,137,58,0.3);
+    border:none;padding:0;cursor:pointer;
+    transition:all .3s ease;
+  }
+  .hero-dot.active{
+    background:var(--bronze);
+    width:24px;border-radius:4px;
+  }
+  .hero-caption-mob{
+    text-align:center;
+    margin-top:16px;
+    font-size:15px;font-weight:500;
+    color:rgba(250,248,243,0.85);
+    min-height:22px;
+    transition:opacity .3s ease;
+  }
+}
+@media (min-width:769px){
+  .hero-dots,.hero-caption-mob{display:none}
 }
 
 
@@ -586,54 +637,104 @@ h2{font-size:clamp(28px,4.4vw,46px);font-weight:700;letter-spacing:-0.025em;line
 /* === НАСТРОЙКА (4 шага) === */
 .setup h2{text-align:center;margin-bottom:18px}
 .setup-sub{text-align:center;color:var(--text-sec);max-width:560px;margin:0 auto 56px;font-size:17px}
-.setup-grid{
-  display:grid;grid-template-columns:repeat(4,1fr);
-  gap:24px;
+
+.setup-interactive{
+  display:grid;
+  grid-template-columns:minmax(280px,360px) 1fr;
+  gap:64px;
+  align-items:start;
+  max-width:920px;
+  margin:0 auto;
 }
-.setup-card{
+
+/* Левая колонка — большой телефон */
+.setup-phone-col{
+  position:sticky;
+  top:90px;
+}
+.setup-phone{
+  position:relative;
+  width:100%;
+  border-radius:36px;
+  background:#1A2421;
+  padding:10px;
+  box-shadow:0 30px 80px rgba(28,40,38,0.25),0 0 0 1px rgba(184,137,58,0.18);
+}
+.setup-phone-screen{
+  border-radius:28px;
+  overflow:hidden;
   background:#fff;
+  aspect-ratio:9/19.5;
+  position:relative;
+}
+.setup-phone-screen img{
+  width:100%;height:100%;
+  object-fit:cover;
+  display:block;
+  transition:opacity .35s ease;
+}
+.setup-phone-screen .img-ph{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text-mute);font-size:11px;
+  text-align:center;padding:16px;
+}
+
+/* Правая колонка — 4 шага */
+.setup-steps{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.setup-step{
+  display:flex;
+  align-items:flex-start;
+  gap:18px;
+  padding:22px 24px;
+  background:transparent;
   border:1px solid var(--border);
   border-radius:var(--r);
-  padding:28px 24px;
-  position:relative;
-  transition:all .3s ease;
+  text-align:left;
+  cursor:pointer;
+  transition:all .25s ease;
+  width:100%;
+  font-family:inherit;
 }
-.setup-card:hover{
-  transform:translateY(-4px);
-  box-shadow:var(--shadow-lg);
+.setup-step:hover{
   border-color:var(--bronze-soft);
+  background:#fff;
 }
-.setup-num{
-  position:absolute;top:-18px;left:24px;
-  width:36px;height:36px;border-radius:50%;
-  background:var(--cream);
-  border:2px solid var(--bronze);
-  color:var(--bronze);
+.setup-step.active{
+  border-color:var(--bronze);
+  background:#fff;
+  box-shadow:0 8px 24px rgba(184,137,58,0.12);
+  transform:translateX(4px);
+}
+.setup-step-num{
+  flex-shrink:0;
+  width:38px;height:38px;border-radius:50%;
+  background:var(--cream-2);
+  border:2px solid var(--border-2);
+  color:var(--text-sec);
   font-family:'Manrope';font-weight:800;font-size:16px;
   display:flex;align-items:center;justify-content:center;
+  transition:all .25s ease;
 }
-.setup-screen{
-  width:100%;
-  background:var(--warm);
-  border-radius:10px;
-  aspect-ratio:9/14;
-  margin:8px 0 18px;
-  display:flex;align-items:center;justify-content:center;
-  color:var(--text-mute);font-size:10px;
-  text-align:center;padding:10px;
-  overflow:hidden;
+.setup-step.active .setup-step-num,
+.setup-step:hover .setup-step-num{
+  background:var(--bronze);
+  border-color:var(--bronze);
+  color:#fff;
 }
-.setup-screen img{width:100%;height:100%;object-fit:cover;border-radius:10px}
-.setup-card h4{
-  font-size:16px;font-weight:700;margin-bottom:6px;
+.setup-step-text{flex:1;min-width:0}
+.setup-step-text h4{
+  font-size:17px;font-weight:700;margin-bottom:4px;
   color:var(--text);letter-spacing:-0.01em;
 }
-.setup-card p{font-size:14px;color:var(--text-sec);line-height:1.5}
-.setup-foot{
-  text-align:center;margin-top:48px;
-  font-size:17px;color:var(--text);
+.setup-step-text p{
+  font-size:14px;color:var(--text-sec);line-height:1.5;
 }
-.setup-foot strong{color:var(--bronze-hover)}
+
 .setup-foot-time{
   display:inline-flex;align-items:center;gap:8px;
   padding:8px 18px;
@@ -646,10 +747,22 @@ h2{font-size:clamp(28px,4.4vw,46px);font-weight:700;letter-spacing:-0.025em;line
 .setup-foot-time svg{width:16px;height:16px}
 
 @media (max-width:900px){
-  .setup-grid{grid-template-columns:repeat(2,1fr);gap:32px 20px}
-}
-@media (max-width:520px){
-  .setup-grid{grid-template-columns:1fr;gap:36px}
+  .setup-interactive{
+    grid-template-columns:1fr;
+    gap:32px;
+    max-width:480px;
+  }
+  .setup-phone-col{
+    position:static;
+    max-width:280px;
+    margin:0 auto;
+    order:2;
+  }
+  .setup-steps{order:1}
+  .setup-step{padding:18px 20px;gap:14px}
+  .setup-step-num{width:34px;height:34px;font-size:15px}
+  .setup-step-text h4{font-size:16px}
+  .setup-step.active{transform:none}
 }
 
 /* === WHY TELEGRAM === */
@@ -1035,6 +1148,13 @@ h2{font-size:clamp(28px,4.4vw,46px);font-weight:700;letter-spacing:-0.025em;line
     </div>
   </div>
 
+  <div class="hero-dots" id="heroDots">
+    <button class="hero-dot active" data-slide="0" aria-label="Слайд 1"></button>
+    <button class="hero-dot" data-slide="1" aria-label="Слайд 2"></button>
+    <button class="hero-dot" data-slide="2" aria-label="Слайд 3"></button>
+  </div>
+  <div class="hero-caption-mob" id="heroCaption">Бачите день одним поглядом</div>
+
   <div class="hero-hint">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21L16.65 16.65"/></svg>
     Реальні екрани мастер-кабінету і запису клієнта
@@ -1305,57 +1425,49 @@ h2{font-size:clamp(28px,4.4vw,46px);font-weight:700;letter-spacing:-0.025em;line
   <h2>Налаштувати — 20 хвилин.<br>Знань не треба</h2>
   <p class="setup-sub">Все робиться кнопками в Telegram. Без сайтів, без додатків, без коду.</p>
 
-  <div class="setup-grid reveal-stagger">
-    <div class="setup-card">
-      <div class="setup-num">1</div>
-      <div class="setup-screen screen-slot" data-gallery="setup">
-        <div class="img-ph">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15L16 10L5 21"/></svg>
-          Профіль майстра
-          <div class="img-ph-name">setup-1.png</div>
+  <div class="setup-interactive">
+    <!-- Левая колонка: один большой телефон со скрином активного шага -->
+    <div class="setup-phone-col">
+      <div class="setup-phone screen-slot" data-gallery="setup">
+        <div class="setup-phone-screen">
+          <img id="setupActiveImg" src="images/setup-1.png" alt="Профіль" data-src="images/setup-1.png" data-name="setup-1.png">
         </div>
       </div>
-      <h4>Профіль</h4>
-      <p>Ім'я, фото, місто, біо. 3 хвилини.</p>
     </div>
 
-    <div class="setup-card">
-      <div class="setup-num">2</div>
-      <div class="setup-screen screen-slot" data-gallery="setup">
-        <div class="img-ph">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15L16 10L5 21"/></svg>
-          Список послуг
-          <div class="img-ph-name">setup-2.png</div>
+    <!-- Правая колонка: 4 шага списком -->
+    <div class="setup-steps reveal-stagger" id="setupSteps">
+      <button type="button" class="setup-step active" data-img="setup-1.png">
+        <div class="setup-step-num">1</div>
+        <div class="setup-step-text">
+          <h4>Профіль</h4>
+          <p>Ім'я, фото, місто, біо. 3 хвилини.</p>
         </div>
-      </div>
-      <h4>Послуги</h4>
-      <p>Назва, тривалість, ціна. По одній додаєте.</p>
-    </div>
+      </button>
 
-    <div class="setup-card">
-      <div class="setup-num">3</div>
-      <div class="setup-screen screen-slot" data-gallery="setup">
-        <div class="img-ph">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15L16 10L5 21"/></svg>
-          Графік роботи
-          <div class="img-ph-name">setup-3.png</div>
+      <button type="button" class="setup-step" data-img="setup-2.png">
+        <div class="setup-step-num">2</div>
+        <div class="setup-step-text">
+          <h4>Послуги</h4>
+          <p>Назва, тривалість, ціна. По одній додаєте.</p>
         </div>
-      </div>
-      <h4>Графік</h4>
-      <p>Робочі дні, час, перерви. Все галочками.</p>
-    </div>
+      </button>
 
-    <div class="setup-card">
-      <div class="setup-num">4</div>
-      <div class="setup-screen screen-slot" data-gallery="setup">
-        <div class="img-ph">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15L16 10L5 21"/></svg>
-          Готове посилання
-          <div class="img-ph-name">setup-4.png</div>
+      <button type="button" class="setup-step" data-img="setup-3.png">
+        <div class="setup-step-num">3</div>
+        <div class="setup-step-text">
+          <h4>Графік</h4>
+          <p>Робочі дні, час, перерви. Все галочками.</p>
         </div>
-      </div>
-      <h4>Посилання</h4>
-      <p>Скопіювати в Instagram — і клієнти записуються.</p>
+      </button>
+
+      <button type="button" class="setup-step" data-img="setup-4.png">
+        <div class="setup-step-num">4</div>
+        <div class="setup-step-text">
+          <h4>Посилання</h4>
+          <p>Скопіювати в Instagram — і клієнти записуються.</p>
+        </div>
+      </button>
     </div>
   </div>
 
@@ -1774,6 +1886,131 @@ lb.addEventListener('touchend', (e) => {
   const dx = e.changedTouches[0].clientX - touchStartX;
   if (Math.abs(dx) > 50) navLb(dx > 0 ? -1 : 1);
 }, {passive:true});
+
+// === HERO CAROUSEL (mobile) ===
+(function(){
+  const phonesEl = document.querySelector('.phones');
+  const dotsWrap = document.getElementById('heroDots');
+  const captionEl = document.getElementById('heroCaption');
+  if (!phonesEl || !dotsWrap || !captionEl) return;
+
+  const captions = [
+    'Бачите день одним поглядом',
+    'Клієнт обирає вільний слот сам',
+    'Керуєте записами в один тап'
+  ];
+  const phones = phonesEl.querySelectorAll('.phone');
+  const dots = dotsWrap.querySelectorAll('.hero-dot');
+  let currentSlide = 0;
+  let autoplayTimer = null;
+  let userInteracted = false;
+  const isMobile = () => window.matchMedia('(max-width:768px)').matches;
+
+  function setActive(idx){
+    if (idx === currentSlide) return;
+    currentSlide = idx;
+    dots.forEach((d,i) => d.classList.toggle('active', i === idx));
+    if (captions[idx]){
+      captionEl.style.opacity = '0';
+      setTimeout(() => {
+        captionEl.textContent = captions[idx];
+        captionEl.style.opacity = '1';
+      }, 150);
+    }
+  }
+
+  function scrollToSlide(idx){
+    if (!phones[idx]) return;
+    const phone = phones[idx];
+    const left = phone.offsetLeft - (phonesEl.clientWidth - phone.clientWidth) / 2;
+    phonesEl.scrollTo({left: Math.max(0, left), behavior:'smooth'});
+  }
+
+  // клік по точці
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', () => {
+      userInteracted = true;
+      setActive(i);
+      scrollToSlide(i);
+    });
+  });
+
+  // следим за скроллом — обновляем активную точку
+  let scrollTimeout = null;
+  phonesEl.addEventListener('scroll', () => {
+    if (!isMobile()) return;
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => {
+      const center = phonesEl.scrollLeft + phonesEl.clientWidth / 2;
+      let closest = 0;
+      let minDist = Infinity;
+      phones.forEach((p, i) => {
+        const pCenter = p.offsetLeft + p.clientWidth / 2;
+        const dist = Math.abs(pCenter - center);
+        if (dist < minDist){ minDist = dist; closest = i; }
+      });
+      if (closest !== currentSlide) setActive(closest);
+    }, 80);
+  }, {passive:true});
+
+  // автоплей
+  function startAutoplay(){
+    stopAutoplay();
+    if (!isMobile() || userInteracted) return;
+    autoplayTimer = setInterval(() => {
+      const next = (currentSlide + 1) % phones.length;
+      setActive(next);
+      scrollToSlide(next);
+    }, 4000);
+  }
+  function stopAutoplay(){
+    if (autoplayTimer){ clearInterval(autoplayTimer); autoplayTimer = null; }
+  }
+
+  // останавливаем автоплей при касании пальцем
+  phonesEl.addEventListener('touchstart', () => {
+    userInteracted = true;
+    stopAutoplay();
+  }, {passive:true});
+
+  // запуск
+  if (isMobile()) startAutoplay();
+  window.addEventListener('resize', () => {
+    if (isMobile() && !userInteracted) startAutoplay();
+    else stopAutoplay();
+  });
+})();
+
+// === SETUP INTERACTIVE (desktop hover + mobile tabs) ===
+(function(){
+  const stepsWrap = document.getElementById('setupSteps');
+  if (!stepsWrap) return;
+  const steps = stepsWrap.querySelectorAll('.setup-step');
+  const activeImg = document.getElementById('setupActiveImg');
+  if (!steps.length || !activeImg) return;
+
+  function activate(step){
+    steps.forEach(s => s.classList.remove('active'));
+    step.classList.add('active');
+    const file = step.dataset.img;
+    if (!file) return;
+    const path = 'images/' + file;
+    activeImg.src = path;
+    activeImg.dataset.src = path;
+    activeImg.dataset.name = file;
+    activeImg.alt = step.querySelector('h4')?.textContent || file;
+  }
+
+  steps.forEach(step => {
+    step.addEventListener('click', (e) => {
+      e.stopPropagation();
+      activate(step);
+    });
+    step.addEventListener('mouseenter', () => {
+      if (window.matchMedia('(hover:hover)').matches) activate(step);
+    });
+  });
+})();
 
 </script>
 
